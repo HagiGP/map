@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>タイルマップの公開</title>
+    <title>萩ジオパークマップ</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
         #map { height: 100vh; } /* 地図を画面全体に表示 */
@@ -11,8 +11,9 @@
     <div id="map"></div>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
-        // 地図を初期化
-        var map = L.map('map', { center: [34.5, 131.5], zoom: 10 });
+        // 地図を初期化（萩・明倫学舎を中心に表示）
+        var hagimeirinsya = [34.40808, 131.39039]; // 萩・明倫学舎の座標
+        var map = L.map('map', { center: hagimeirinsya, zoom: 14 });
 
         // baseUrlを生成
         var baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '');
@@ -25,7 +26,7 @@
         // タイルマップを追加
         L.tileLayer(baseUrl + '/tiles/{z}/{x}/{y}.png', {
             maxZoom: 14,
-            minZoom: 8,
+            minZoom: 11,
             bounds: tileBounds,
             attribution: '© Your Map Provider',
             errorTileUrl: baseUrl + '/tiles/placeholder.png' // ダミータイル
@@ -33,35 +34,9 @@
             console.error('タイルが見つかりません:', e.tile.src);
         }).addTo(map);
 
-        // 現在地を取得
-        map.locate({ setView: true, maxZoom: 14 });
-
-        // 現在地が取得できたとき
-        map.on('locationfound', function(e) {
-            var radius = e.accuracy / 2;
-
-            // 現在地のマーカー
-            L.marker(e.latlng).addTo(map)
-                .bindPopup("ここが現在地です").openPopup();
-
-            // 現在地の範囲
-            L.circle(e.latlng, radius).addTo(map);
-        });
-
-        // 現在地が取得できなかったとき
-        map.on('locationerror', function(e) {
-            var hagimeirinsya = [34.40808, 131.39039]; // 萩・明倫学舎の座標
-            map.setView(hagimeirinsya, 14);
-
-            L.marker(hagimeirinsya).addTo(map)
-                .bindPopup("現在地が取得できなかったため、萩・明倫学舎を中心に表示しています。<br>" +
-                           "エラー: " + e.message).openPopup();
-        });
-
         // 地図の範囲外に移動した場合に萩・明倫学舎を中心に戻す
         map.on('moveend', function() {
             if (!tileBounds.contains(map.getCenter())) {
-                var hagimeirinsya = [34.40808, 131.39039]; // 萩・明倫学舎の座標
                 map.setView(hagimeirinsya, 14);
 
                 L.marker(hagimeirinsya).addTo(map)
