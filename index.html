@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>萩ジオパークマップ</title>
+    <title>タイルマップの公開</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
         #map { height: 100vh; } /* 地図を画面全体に表示 */
@@ -29,6 +29,10 @@
             minZoom: 8,
             bounds: tileBounds,
             attribution: '© Your Map Provider',
+            errorTileUrl: baseUrl + '/tiles/placeholder.png' // ダミータイル
+        }).on('tileerror', function(e) {
+            console.error('タイルが見つかりません:', e.tile.src);
+        }).addTo(map);
 
         // 地図の範囲外に移動した場合に萩・明倫学舎を中心に戻す
         map.on('moveend', function() {
