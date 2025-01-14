@@ -15,11 +15,12 @@
         var map = L.map('map', { center: [34.5, 131.5], zoom: 10 });
 
         // タイルマップを追加
-        L.tileLayer('./map/tiles/{z}/{x}/{y}.png', {
-            maxZoom: 14,
-            minZoom: 8,
-            attribution: '© Your Map Provider'
-        }).addTo(map);
+var baseUrl = window.location.pathname.replace(/\/[^/]*$/, '');
+L.tileLayer(baseUrl + '/tiles/{z}/{x}/{y}.png', {
+    maxZoom: 14,
+    attribution: '© Your Map Provider'
+}).addTo(map);
+
 
         // 現在地を取得
         map.locate({ setView: true, maxZoom: 14 });
