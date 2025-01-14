@@ -26,13 +26,9 @@
         // タイルマップを追加
         L.tileLayer(baseUrl + '/tiles/{z}/{x}/{y}.png', {
             maxZoom: 14,
-            minZoom: 11,
+            minZoom: 8,
             bounds: tileBounds,
             attribution: '© Your Map Provider',
-            errorTileUrl: baseUrl + '/tiles/placeholder.png' // ダミータイル
-        }).on('tileerror', function(e) {
-            console.error('タイルが見つかりません:', e.tile.src);
-        }).addTo(map);
 
         // 地図の範囲外に移動した場合に萩・明倫学舎を中心に戻す
         map.on('moveend', function() {
